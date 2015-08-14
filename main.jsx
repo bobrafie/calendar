@@ -1,8 +1,15 @@
 var TimeSlot = React.createClass({
-  // getInitialState: function() {
-  //   debugger
-  //   return {data: []};
-  // },
+    handleMouseOver: function(event) {
+    var currentTarget = $(event.currentTarget);
+
+    currentTarget.css('z-index', 9999);
+  },
+
+  handleMouseOut: function(event) {
+    var currentTarget = $(event.currentTarget);
+
+    currentTarget.css('z-index', 'auto');
+  },
 
   render: function() {
     var slot = this.props && this.props.slot,
@@ -12,18 +19,29 @@ var TimeSlot = React.createClass({
       var startDate = moment(slot.start),
           endDate = moment(slot.end),
           slotStyle = {
-            top: startDate.hour() * 20 + 'px',
-          };
+            top: (startDate.hour() - 9 + startDate.minute() / 60) * 75 + 'px',
+            height: (endDate.diff(startDate, 'minutes') / 60) * 75 + 'px'
+          },
+          duration = moment.duration(slot.minute_length, 'minutes'),
+          durationHours = duration.hours(),
+          durationMinutes = duration.minutes(),
+          durationString = [];
+
+      if (durationHours) {
+        durationString.push(durationHours + "h");
+      }
+      if (durationMinutes) {
+        durationString.push(durationMinutes + "min");
+      }
 
       res = (
-        <div className="timeSlot panel panel-default" style={slotStyle}>
+        <div className="timeSlot panel panel-default" style={slotStyle} data-id={slot.id} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
           <div className="panel-heading">
-            <h3 className="panel-title">{slot.activity_name} ({slot.id})</h3>
+            <h3 className="panel-title">{slot.activity_name}</h3>
           </div>
           <div className="panel-body">
-            <div className="start">{startDate.format("dddd, MMMM Do YYYY, h:mm:ss a")}</div>
-            <div className="end">{endDate.format("dddd, MMMM Do YYYY, h:mm:ss a")}</div>
-            <div className="length">{slot.minute_length} minutes</div>
+            <span className="time">{startDate.format("h:mm A") + " --> " + endDate.format("h:mm A")}</span>
+            <span className="duration"> ({durationString.join(" ")})</span>
           </div>
         </div>
       );
@@ -44,17 +62,45 @@ var Calendar = React.createClass({
       });
   },
 
-  componentDidMount: function() {
+  adjustOverlaps: function() {
+    var timeSlots = $('.timeSlot');
+
+    timeSlots.each(function(index, timeSlot) {
+      if (index > 0) {
+        var previousTimeSlot = $(timeSlots[index - 1]),
+            previousBottom = previousTimeSlot.position().top + previousTimeSlot.height(),
+            top = $(timeSlot).position().top;
+
+        if (previousBottom > top) {
+          var previousLeft = previousTimeSlot.css('left'),
+              newLeft = (parseInt(previousLeft) + 30) % $(timeSlot).width();
+
+          $(timeSlot).css('left', newLeft + 'px');
+        }
+      }
+    });
+  },
+
+  componentWillMount: function() {
     this.loadTimeSlots();
   },
 
+  componentDidUpdate: function() {
+    this.adjustOverlaps();
+  },
+
   render: function() {
-    var slots = this.state && this.state.day_1 && this.state.day_1.timeslots;
+    var slots = this.state && this.state.day_1 && this.state.day_1.timeslots,
+        firstSlot = _.first(slots),
+        title = firstSlot ? moment(firstSlot.start).format("dddd, MMMM Do YYYY") : "Calendar";
 
     return (
       <div className="calendar">
-        <h1>Calendar</h1>
+        <h1>{title}</h1>
         <div className="day">
+          <div className="timeIndex timeIndex0">9 AM</div>
+          <div className="timeIndex timeIndex1">1 PM</div>
+          <div className="timeIndex timeIndex2">5 PM</div>
           { _.map(slots, function(slot) {
             return <TimeSlot slot={slot} />
           })}
@@ -64,5 +110,5 @@ var Calendar = React.createClass({
   }
 });
 
-React.render(<Calendar url="/day_1.json"/>,
+React.render(<div><Calendar url="/day_1.json"/><Calendar url="/day_2.json"/><Calendar url="/day_3.json"/></div>,
   document.getElementById('content'));

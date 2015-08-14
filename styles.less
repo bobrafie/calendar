@@ -1,16 +1,40 @@
 #content {
   .calendar {
     .day {
-        background-size: 100% 20px;
+        background-size: 100% 75px;
         background-image: linear-gradient(to bottom, black 0%, transparent 7%, transparent 100%);
-        width: 500px;
-        height: 500px;
+        width: 600px;
+        height: 675px;
         position: relative;
+
+        .timeIndex {
+          position: absolute;
+          font-size: 30px;
+          left: -85px;
+
+          &.timeIndex0 {
+            top: -20px;
+          }
+          &.timeIndex1 {
+            top: 280px;
+          }
+          &.timeIndex2 {
+            top: 580px;
+          }
+        }
 
         .timeSlot {
           left: 10%;
-          width: 75%;
+          width: 55%;
           position: absolute;
+
+          .panel-heading {
+            padding: 7px;
+
+            .panel-title {
+              font-size: 14px;
+            }
+          }
         }
     }
   }

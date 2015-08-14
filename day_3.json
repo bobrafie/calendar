@@ -1,0 +1,54 @@
+{
+   "timeslots":[
+      {
+         "id":"5531a21178b45a502f000029|1433347200",
+         "available_spots":10,
+         "booked_count":0,
+         "max_guests":10,
+         "minute_length":180,
+         "start":"2015-06-03T09:00:00-07:00",
+         "end":"2015-06-03T12:00:00-07:00",
+         "activity_name":"Activity 1"
+      },
+      {
+         "id":"5531a24678b45a502f000053|1433350800",
+         "available_spots":5,
+         "booked_count":0,
+         "max_guests":5,
+         "minute_length":240,
+         "start":"2015-06-03T10:00:00-07:00",
+         "end":"2015-06-03T14:00:00-07:00",
+         "activity_name":"Activity 3"
+      },
+      {
+         "id":"5531a21b78b45a502f000031|1433354400",
+         "available_spots":10,
+         "booked_count":0,
+         "max_guests":10,
+         "minute_length":60,
+         "start":"2015-06-03T11:00:00-07:00",
+         "end":"2015-06-03T12:00:00-07:00",
+         "activity_name":"Activity 2"
+      },
+      {
+         "id":"5531a26278b45a15b900000c|1433359800",
+         "available_spots":10,
+         "booked_count":0,
+         "max_guests":10,
+         "minute_length":60,
+         "start":"2015-06-03T12:30:00-07:00",
+         "end":"2015-06-03T13:30:00-07:00",
+         "activity_name":"Activity 2"
+      },
+      {
+         "id":"5531a26278b45a15b900000c|1433359800",
+         "available_spots":10,
+         "booked_count":0,
+         "max_guests":10,
+         "minute_length":60,
+         "start":"2015-06-03T13:00:00-07:00",
+         "end":"2015-06-03T16:30:00-07:00",
+         "activity_name":"Activity 2"
+      }
+   ]
+}
