@@ -34,10 +34,34 @@ var TimeSlot = React.createClass({
         durationString.push(durationMinutes + "min");
       }
 
+      var percentageBooked = Math.round(slot.booked_count / slot.max_guests * 100),
+          barClass = "progress-bar ",
+          panelClass = "timeSlot panel ";
+
+      if (percentageBooked < 25) {
+        barClass += "progress-bar-success";
+      } else if (percentageBooked < 50) {
+        barClass += "progress-bar-info";
+      } else if (percentageBooked < 75) {
+        barClass += "progress-bar-warning";
+      } else {
+        barClass += "progress-bar-danger";
+      }
+      percentageBooked += "%";
+
+      panelClass += this.props.activityStyles[slot.activity_name];
+
       res = (
-        <div className="timeSlot panel panel-default" style={slotStyle} data-id={slot.id} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
+        <div className={panelClass} style={slotStyle} data-id={slot.id} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
           <div className="panel-heading">
-            <h3 className="panel-title">{slot.activity_name}</h3>
+            <div className="row">
+              <h3 className="panel-title col-sm-3">{slot.activity_name}</h3>
+              <div className="progress col-sm-offset-3 col-sm-5">
+                <div className={barClass} role="progressbar" aria-valuenow={slot.booked_count} aria-valuemin="0" aria-valuemax={slot.max_guests} style={{width: percentageBooked}} >
+                  {slot.booked_count} / {slot.max_guests}
+                </div>
+              </div>
+            </div>
           </div>
           <div className="panel-body">
             <span className="time">{startDate.format("h:mm A") + " --> " + endDate.format("h:mm A")}</span>
@@ -52,6 +76,16 @@ var TimeSlot = React.createClass({
 });
 
 var Calendar = React.createClass({
+  getDefaultProps: function() {
+    return {
+      activityStyles: {
+        "Activity 1": "panel-success",
+        "Activity 2": "panel-info",
+        "Activity 3": "panel-warning",
+      }
+    };
+  },
+
   loadTimeSlots: function() {
     var self = this;
     console.log(this.props.url);
@@ -102,8 +136,8 @@ var Calendar = React.createClass({
           <div className="timeIndex timeIndex1">1 PM</div>
           <div className="timeIndex timeIndex2">5 PM</div>
           { _.map(slots, function(slot) {
-            return <TimeSlot slot={slot} />
-          })}
+            return <TimeSlot slot={slot} activityStyles={this.props.activityStyles} />
+          }, this)}
         </div>
       </div>
     );
